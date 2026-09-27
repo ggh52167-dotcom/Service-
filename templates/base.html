@@ -11,7 +11,8 @@
             box-sizing: border-box;
         }
 
-        html, body {
+        html,
+        body {
             margin: 0;
             padding: 0;
             background: #ffffff;
@@ -32,7 +33,7 @@
             width: 100%;
             max-width: 1100px;
             margin: auto;
-            padding: 0 12px;
+            padding: 0 10px;
         }
 
         nav {
@@ -65,15 +66,13 @@
         }
 
         .hero {
-            padding: 32px 0 22px;
+            padding: 28px 0 20px;
         }
 
         .grid {
             display: grid;
-            grid-template-columns: repeat(
-                auto-fit,
-                minmax(230px, 1fr)
-            );
+            grid-template-columns:
+                repeat(auto-fit, minmax(230px, 1fr));
             gap: 15px;
         }
 
@@ -110,6 +109,10 @@
             margin: 6px 0 12px;
         }
 
+        /* =========================
+           PUBLICITÉS
+           ========================= */
+
         .ad {
             width: 100%;
             display: flex;
@@ -117,7 +120,7 @@
             align-items: center;
             overflow: hidden;
             background: #ffffff;
-            margin: 16px 0;
+            margin: 18px 0;
         }
 
         .ad-320 {
@@ -141,6 +144,7 @@
         }
 
         @media(max-width:600px) {
+
             .wrap {
                 padding: 0 10px;
             }
@@ -154,8 +158,13 @@
             }
 
             .hero {
-                padding: 26px 0 18px;
+                padding: 24px 0 18px;
             }
+
+            .ad {
+                margin: 14px 0;
+            }
+
         }
     </style>
 </head>
@@ -164,22 +173,33 @@
 
 <div class="wrap">
 
+    <!-- =========================
+         NAVIGATION
+         ========================= -->
+
     <nav>
-        <a class="brand" href="/">
+
+        <a
+            class="brand"
+            href="/"
+        >
             🎬 Vidéo & Services
         </a>
 
-        <a class="btn secondary" href="/admin/login">
+        <a
+            class="btn secondary"
+            href="/admin/login"
+        >
             Administration
         </a>
+
     </nav>
 
 
-    <!-- ================================= -->
-    <!-- PUBLICITÉ 320x50 - HAUT -->
-    <!-- ================================= -->
-
-    {% if site_settings.ads_enabled == "1" %}
+    <!-- =========================
+         PUBLICITÉ 320x50
+         HAUT DE PAGE
+         ========================= -->
 
     <div class="ad ad-320">
 
@@ -193,21 +213,24 @@
             };
         </script>
 
-        <script src="https://www.highrevenueformat.com/a509ca15d84135d59f042645b29d8f70/invoke.js"></script>
+        <script
+            src="https://www.highrevenueformat.com/a509ca15d84135d59f042645b29d8f70/invoke.js">
+        </script>
 
     </div>
 
-    {% endif %}
+
+    <!-- =========================
+         CONTENU DE LA PAGE
+         ========================= -->
+
+    {% block content %}
+    {% endblock %}
 
 
-    {% block content %}{% endblock %}
-
-
-    <!-- ================================= -->
-    <!-- NATIVE BANNER -->
-    <!-- ================================= -->
-
-    {% if site_settings.ads_enabled == "1" %}
+    <!-- =========================
+         NATIVE BANNER
+         ========================= -->
 
     <div class="ad ad-native">
 
@@ -217,18 +240,16 @@
             src="https://pl31541844.profitableratecpmnetwork.com/d6e531ee19950902ce1526c9fe29dd25/invoke.js">
         </script>
 
-        <div id="container-d6e531ee19950902ce1526c9fe29dd25"></div>
+        <div
+            id="container-d6e531ee19950902ce1526c9fe29dd25">
+        </div>
 
     </div>
 
-    {% endif %}
 
-
-    <!-- ================================= -->
-    <!-- PUBLICITÉ 300x250 -->
-    <!-- ================================= -->
-
-    {% if site_settings.ads_enabled == "1" %}
+    <!-- =========================
+         PUBLICITÉ 300x250
+         ========================= -->
 
     <div class="ad ad-300">
 
@@ -242,18 +263,17 @@
             };
         </script>
 
-        <script src="https://www.highrevenueformat.com/a5ac1eb01ec8ffa5b4dde32e0a99f461/invoke.js"></script>
+        <script
+            src="https://www.highrevenueformat.com/a5ac1eb01ec8ffa5b4dde32e0a99f461/invoke.js">
+        </script>
 
     </div>
 
-    {% endif %}
 
-
-    <!-- ================================= -->
-    <!-- PUBLICITÉ 320x50 - BAS -->
-    <!-- ================================= -->
-
-    {% if site_settings.ads_enabled == "1" %}
+    <!-- =========================
+         PUBLICITÉ 320x50
+         BAS DE PAGE
+         ========================= -->
 
     <div class="ad ad-320">
 
@@ -267,12 +287,16 @@
             };
         </script>
 
-        <script src="https://www.highrevenueformat.com/a509ca15d84135d59f042645b29d8f70/invoke.js"></script>
+        <script
+            src="https://www.highrevenueformat.com/a509ca15d84135d59f042645b29d8f70/invoke.js">
+        </script>
 
     </div>
 
-    {% endif %}
 
+    <!-- =========================
+         FOOTER
+         ========================= -->
 
     <footer>
         Services gratuits • Aucun compte nécessaire
@@ -281,4 +305,4 @@
 </div>
 
 </body>
-  </html>
+            </html>
