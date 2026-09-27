@@ -1,12 +1,31 @@
 <!doctype html>
 <html lang="fr">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>{% block title %}Vidéo & Services{% endblock %}</title>
+<head>
+
+    <meta charset="utf-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1"
+    >
+
+    <!-- =========================
+         MONETAG - VÉRIFICATION
+         ========================= -->
+
+    <meta
+        name="monetag"
+        content="d043e9247dbe049ae76bfd45bff60143"
+    >
+
+    <title>
+        {% block title %}Vidéo & Services{% endblock %}
+    </title>
+
 
     <style>
+
         * {
             box-sizing: border-box;
         }
@@ -72,7 +91,11 @@
         .grid {
             display: grid;
             grid-template-columns:
-                repeat(auto-fit, minmax(230px, 1fr));
+                repeat(
+                    auto-fit,
+                    minmax(230px, 1fr)
+                );
+
             gap: 15px;
         }
 
@@ -81,7 +104,8 @@
             border: 1px solid #e7e7e7;
             border-radius: 16px;
             padding: 18px;
-            box-shadow: 0 2px 9px rgba(0,0,0,.04);
+            box-shadow:
+                0 2px 9px rgba(0,0,0,.04);
         }
 
         .muted {
@@ -109,6 +133,7 @@
             margin: 6px 0 12px;
         }
 
+
         /* =========================
            PUBLICITÉS
            ========================= */
@@ -135,6 +160,7 @@
             min-height: 90px;
         }
 
+
         footer {
             margin-top: 40px;
             padding: 28px 0;
@@ -142,6 +168,7 @@
             text-align: center;
             color: #777777;
         }
+
 
         @media(max-width:600px) {
 
@@ -166,12 +193,17 @@
             }
 
         }
+
     </style>
+
 </head>
+
 
 <body>
 
+
 <div class="wrap">
+
 
     <!-- =========================
          NAVIGATION
@@ -186,6 +218,7 @@
             🎬 Vidéo & Services
         </a>
 
+
         <a
             class="btn secondary"
             href="/admin/login"
@@ -196,22 +229,36 @@
     </nav>
 
 
-    <!-- =========================
-         PUBLICITÉ 320x50
+    <!-- ==================================================
+         ADSTERRA - 320x50
          HAUT DE PAGE
-         ========================= -->
+         ================================================== -->
 
     <div class="ad ad-320">
 
         <script>
+
             atOptions = {
-                'key' : 'a509ca15d84135d59f042645b29d8f70',
-                'format' : 'iframe',
-                'height' : 50,
-                'width' : 320,
-                'params' : {}
+
+                'key':
+                'a509ca15d84135d59f042645b29d8f70',
+
+                'format':
+                'iframe',
+
+                'height':
+                50,
+
+                'width':
+                320,
+
+                'params':
+                {}
+
             };
+
         </script>
+
 
         <script
             src="https://www.highrevenueformat.com/a509ca15d84135d59f042645b29d8f70/invoke.js">
@@ -221,16 +268,17 @@
 
 
     <!-- =========================
-         CONTENU DE LA PAGE
+         CONTENU
          ========================= -->
 
     {% block content %}
+
     {% endblock %}
 
 
-    <!-- =========================
-         NATIVE BANNER
-         ========================= -->
+    <!-- ==================================================
+         ADSTERRA - NATIVE BANNER
+         ================================================== -->
 
     <div class="ad ad-native">
 
@@ -240,6 +288,7 @@
             src="https://pl31541844.profitableratecpmnetwork.com/d6e531ee19950902ce1526c9fe29dd25/invoke.js">
         </script>
 
+
         <div
             id="container-d6e531ee19950902ce1526c9fe29dd25">
         </div>
@@ -247,21 +296,35 @@
     </div>
 
 
-    <!-- =========================
-         PUBLICITÉ 300x250
-         ========================= -->
+    <!-- ==================================================
+         ADSTERRA - 300x250
+         ================================================== -->
 
     <div class="ad ad-300">
 
         <script>
+
             atOptions = {
-                'key' : 'a5ac1eb01ec8ffa5b4dde32e0a99f461',
-                'format' : 'iframe',
-                'height' : 250,
-                'width' : 300,
-                'params' : {}
+
+                'key':
+                'a5ac1eb01ec8ffa5b4dde32e0a99f461',
+
+                'format':
+                'iframe',
+
+                'height':
+                250,
+
+                'width':
+                300,
+
+                'params':
+                {}
+
             };
+
         </script>
+
 
         <script
             src="https://www.highrevenueformat.com/a5ac1eb01ec8ffa5b4dde32e0a99f461/invoke.js">
@@ -270,22 +333,36 @@
     </div>
 
 
-    <!-- =========================
-         PUBLICITÉ 320x50
+    <!-- ==================================================
+         ADSTERRA - 320x50
          BAS DE PAGE
-         ========================= -->
+         ================================================== -->
 
     <div class="ad ad-320">
 
         <script>
+
             atOptions = {
-                'key' : 'a509ca15d84135d59f042645b29d8f70',
-                'format' : 'iframe',
-                'height' : 50,
-                'width' : 320,
-                'params' : {}
+
+                'key':
+                'a509ca15d84135d59f042645b29d8f70',
+
+                'format':
+                'iframe',
+
+                'height':
+                50,
+
+                'width':
+                320,
+
+                'params':
+                {}
+
             };
+
         </script>
+
 
         <script
             src="https://www.highrevenueformat.com/a509ca15d84135d59f042645b29d8f70/invoke.js">
@@ -294,15 +371,25 @@
     </div>
 
 
-    <!-- =========================
-         FOOTER
-         ========================= -->
+    <!-- ==================================================
+         MONETAG
+         Le meta de vérification est dans le <head>.
+         
+         Aucun faux code publicitaire Monetag n'est ajouté
+         tant que Monetag ne fournit pas le script d'annonce.
+         ================================================== -->
+
 
     <footer>
+
         Services gratuits • Aucun compte nécessaire
+
     </footer>
+
 
 </div>
 
+
 </body>
-            </html>
+
+</html>
