@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% block title %}{{ service.name }}{% endblock %}
+{% block content %}
+<section class="hero"><h1>{{ service.name }}</h1><p class="muted">{{ service.description }}</p></section>
+<div class="card">
+
+{% if service.slug=="qr" %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<label>Texte ou lien</label><input id="qrText" placeholder="https://exemple.com">
+<button class="btn" onclick="makeQR()">Créer le QR code</button>
+<div id="qrcode" style="margin-top:20px;background:white;padding:16px;width:max-content"></div>
+<script>
+function makeQR(){
+  const box=document.getElementById('qrcode'); box.innerHTML='';
+  const value=document.getElementById('qrText').value.trim();
+  if(!value){alert('Entrez un texte ou un lien.');return;}
+  new QRCode(box,{text:value,width:220,height:220});
+}
+</script>
+
+{% elif service.slug=="currency" %}
+<p class="muted">Les taux de démonstration sont configurables depuis l'administration. Pour une conversion financière réelle et actualisée, connectez une API de taux de change dans l'administration/backend.</p>
+<div class="grid">
+<div><label>Montant</label><input id="amount" type="number" value="1" step="any"></div>
+<div><label>De</label><select id="from"></select></div>
+<div><label>Vers</label><select id="to"></select></div>
+</div>
+<button class="btn" onclick="convertCurrency()">Convertir</button>
+<h2 id="result">—</h2>
+<script>
+const rates={};
+const raw={{ site_settings.currency_rates|tojson }};
+raw.split(';').forEach(x=>{let p=x.split('=');if(p.length===2)rates[p[0].trim().toUpperCase()]=parseFloat(p[1]);});
+const from=document.getElementById('from'),to=document.getElementById('to');
+Object.keys(rates).forEach(c=>{from.add(new Option(c,c));to.add(new Option(c,c));});
+from.value='EUR'; to.value='XOF';
+function convertCurrency(){
+ const a=parseFloat(document.getElementById('amount').value)||0;
+ const f=from.value,t=to.value;
+ if(!rates[f]||!rates[t]) return;
+ const v=a*(rates[t]/rates[f]);
+ document.getElementById('result').textContent=a.toLocaleString()+' '+f+' = '+v.toLocaleString(undefined,{maximumFractionDigits:4})+' '+t;
+}
+</script>
+
+{% elif service.slug=="text" %}
+<textarea id="text" rows="8" placeholder="Votre texte..."></textarea>
+<button class="btn" onclick="document.getElementById('text').value=document.getElementById('text').value.toUpperCase()">MAJUSCULES</button>
+<button class="btn secondary" onclick="document.getElementById('text').value=document.getElementById('text').value.toLowerCase()">minuscules</button>
+
+{% elif service.slug=="counter" %}
+<textarea id="text" rows="8" oninput="count()"></textarea><p id="count">0 mot(s), 0 caractère(s)</p>
+<script>function count(){let x=document.getElementById('text').value;document.getElementById('count').textContent=(x.trim()?x.trim().split(/\s+/).length:0)+' mot(s), '+x.length+' caractère(s)'}</script>
+
+{% elif service.slug=="password" %}
+<button class="btn" onclick="gen()">Générer</button><input id="out" readonly>
+<script>function gen(){let a='ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789!@#$%';let x='';for(let i=0;i<16;i++)x+=a[Math.floor(Math.random()*a.length)];document.getElementById('out').value=x}</script>
+
+{% elif service.slug=="json" %}
+<textarea id="json" rows="10" placeholder='{"exemple":true}'></textarea><button class="btn" onclick="fmt()">Formater</button>
+<script>function fmt(){let e=document.getElementById('json');try{e.value=JSON.stringify(JSON.parse(e.value),null,2)}catch(_){alert('JSON invalide')}}</script>
+
+{% elif service.slug=="slug" %}
+<input id="slugInput" placeholder="Mon titre très intéressant">
+<button class="btn" onclick="makeSlug()">Créer le slug</button><input id="slugOutput" readonly>
+<script>function makeSlug(){let x=document.getElementById('slugInput').value.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().trim().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');document.getElementById('slugOutput').value=x}</script>
+
+{% elif service.slug=="percent" %}
+<div class="grid"><div><label>Valeur</label><input id="p1" type="number" step="any"></div><div><label>Pourcentage</label><input id="p2" type="number" step="any"></div></div>
+<button class="btn" onclick="calcPercent()">Calculer</button><h2 id="percentResult">—</h2>
+<script>function calcPercent(){let a=parseFloat(p1.value)||0,b=parseFloat(p2.value)||0;percentResult.textContent=(a*b/100).toLocaleString()}</script>
+
+{% else %}
+<p>Ce service peut être configuré depuis l'administration.</p>
+{% endif %}
+</div>
+{% endblock %}

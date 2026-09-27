@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}{{ service.name }} — Vidéo & Services{% endblock %}
+{% block content %}
+<section class="hero">
+<span class="badge">Service</span><h1>{{ service.name }}</h1><p class="muted">{{ service.description }}</p>
+</section>
+
+{% if site_settings.ads_enabled=="1" and site_settings.ad_service %}
+<div class="ad">{{ site_settings.ad_service|safe }}</div>
+{% else %}
+<!-- ADSTERRA_SERVICE -->
+{% endif %}
+
+{% if service.reward_required %}
+<div class="card">
+<h2>🎬 Débloquer ce service</h2>
+<p class="muted">La publicité doit être réellement validée par le fournisseur publicitaire. Un simple clic ne suffit pas.</p>
+<div id="rewardBox">
+<button class="btn" onclick="startReward()">Regarder une vidéo pour débloquer ce service</button>
+<p id="rewardMsg" class="muted"></p>
+</div>
+<!-- ADSTERRA_REWARDED_START -->
+<!-- FUTUR CODE PUBLICITAIRE RÉCOMPENSÉ -->
+<!-- ADSTERRA_REWARDED_END -->
+</div>
+{% else %}
+<a class="btn" href="{{ url_for('use_service', service_id=service.id) }}">Utiliser le service</a>
+{% endif %}
+
+<script>
+async function startReward(){
+  const msg=document.getElementById('rewardMsg');
+  msg.textContent='Préparation de la publicité…';
+  const r=await fetch('/api/reward/start',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({service_id:{{service.id}}})});
+  const data=await r.json();
+  msg.textContent=data.message || data.error || 'Impossible de démarrer.';
+  // IMPORTANT : la récompense n'est accordée qu'après une validation
+  // vérifiable du fournisseur. Brancher ici le callback officiel du format choisi.
+}
+</script>
+{% endblock %}

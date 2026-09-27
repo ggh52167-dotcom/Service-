@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}Administration{% endblock %}
+{% block content %}
+<div class="hero"><h1>Administration</h1>
+<form class="card" method="post">
+<label>Mot de passe</label><input type="password" name="password" required>
+<button class="btn">Se connecter</button>
+{% if error %}<p>{{error}}</p>{% endif %}
+</form></div>
+{% endblock %}
