@@ -1,41 +1,559 @@
 {% extends "base.html" %}
-{% block title %}{{ service.name }} — Vidéo & Services{% endblock %}
+
+{% block title %}
+{{ service.name }} — Vidéo & Services
+{% endblock %}
+
 {% block content %}
+
 <section class="hero">
-<span class="badge">Service</span><h1>{{ service.name }}</h1><p class="muted">{{ service.description }}</p>
+
+    <span class="badge">
+        Service disponible
+    </span>
+
+    <h1>
+        {{ service.name }}
+    </h1>
+
+    <p class="muted">
+        {{ service.description }}
+    </p>
+
 </section>
 
-{% if site_settings.ads_enabled=="1" and site_settings.ad_service %}
-<div class="ad">{{ site_settings.ad_service|safe }}</div>
-{% else %}
-<!-- ADSTERRA_SERVICE -->
+
+{% if site_settings.ads_enabled == "1" and site_settings.ad_service %}
+
+<div class="ad">
+    {{ site_settings.ad_service|safe }}
+</div>
+
 {% endif %}
 
-{% if service.reward_required %}
+
 <div class="card">
-<h2>🎬 Débloquer ce service</h2>
-<p class="muted">La publicité doit être réellement validée par le fournisseur publicitaire. Un simple clic ne suffit pas.</p>
-<div id="rewardBox">
-<button class="btn" onclick="startReward()">Regarder une vidéo pour débloquer ce service</button>
-<p id="rewardMsg" class="muted"></p>
+
+{% if service.slug == "qr" %}
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+<h2>
+    Générateur de QR code
+</h2>
+
+<input
+    id="qrText"
+    placeholder="Texte ou lien"
+>
+
+<button
+    class="btn"
+    onclick="makeQR()"
+>
+    Créer le QR code
+</button>
+
+<div
+    id="qrcode"
+    style="margin-top:20px;padding:16px;width:max-content;background:#fff">
 </div>
-<!-- ADSTERRA_REWARDED_START -->
-<!-- FUTUR CODE PUBLICITAIRE RÉCOMPENSÉ -->
-<!-- ADSTERRA_REWARDED_END -->
-</div>
-{% else %}
-<a class="btn" href="{{ url_for('use_service', service_id=service.id) }}">Utiliser le service</a>
-{% endif %}
 
 <script>
-async function startReward(){
-  const msg=document.getElementById('rewardMsg');
-  msg.textContent='Préparation de la publicité…';
-  const r=await fetch('/api/reward/start',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({service_id:{{service.id}}})});
-  const data=await r.json();
-  msg.textContent=data.message || data.error || 'Impossible de démarrer.';
-  // IMPORTANT : la récompense n'est accordée qu'après une validation
-  // vérifiable du fournisseur. Brancher ici le callback officiel du format choisi.
+function makeQR() {
+
+    const box = document.getElementById("qrcode");
+
+    box.innerHTML = "";
+
+    const value =
+        document.getElementById("qrText").value.trim();
+
+    if (!value) {
+        alert("Entrez un texte ou un lien.");
+        return;
+    }
+
+    new QRCode(box, {
+        text: value,
+        width: 220,
+        height: 220
+    });
 }
 </script>
+
+
+{% elif service.slug == "currency" %}
+
+<h2>
+    Convertisseur de monnaie
+</h2>
+
+<p class="muted">
+    Les taux sont configurables depuis l'administration.
+</p>
+
+<div class="grid">
+
+    <div>
+
+        <label>
+            Montant
+        </label>
+
+        <input
+            id="amount"
+            type="number"
+            value="1"
+            step="any"
+        >
+
+    </div>
+
+
+    <div>
+
+        <label>
+            De
+        </label>
+
+        <select id="from"></select>
+
+    </div>
+
+
+    <div>
+
+        <label>
+            Vers
+        </label>
+
+        <select id="to"></select>
+
+    </div>
+
+</div>
+
+
+<button
+    class="btn"
+    onclick="convertCurrency()"
+>
+    Convertir
+</button>
+
+
+<h2 id="result">
+    —
+</h2>
+
+
+<script>
+
+const rates = {};
+
+const raw =
+    {{ site_settings.currency_rates|tojson }};
+
+raw.split(";").forEach(item => {
+
+    let parts = item.split("=");
+
+    if (parts.length === 2) {
+
+        rates[
+            parts[0].trim().toUpperCase()
+        ] = parseFloat(parts[1]);
+
+    }
+
+});
+
+
+const from =
+    document.getElementById("from");
+
+const to =
+    document.getElementById("to");
+
+
+Object.keys(rates).forEach(currency => {
+
+    from.add(
+        new Option(currency, currency)
+    );
+
+    to.add(
+        new Option(currency, currency)
+    );
+
+});
+
+
+if (rates.EUR) {
+    from.value = "EUR";
+}
+
+if (rates.XOF) {
+    to.value = "XOF";
+}
+
+
+function convertCurrency() {
+
+    const amount =
+        parseFloat(
+            document.getElementById("amount").value
+        ) || 0;
+
+    const f = from.value;
+
+    const t = to.value;
+
+    if (!rates[f] || !rates[t]) {
+        return;
+    }
+
+    const result =
+        amount * (rates[t] / rates[f]);
+
+    document.getElementById("result").textContent =
+        amount.toLocaleString()
+        + " "
+        + f
+        + " = "
+        + result.toLocaleString(
+            undefined,
+            {
+                maximumFractionDigits: 4
+            }
+        )
+        + " "
+        + t;
+
+}
+
+</script>
+
+
+{% elif service.slug == "text" %}
+
+<h2>
+    Convertisseur de texte
+</h2>
+
+<textarea
+    id="text"
+    rows="8"
+    placeholder="Votre texte..."
+></textarea>
+
+<button
+    class="btn"
+    onclick="
+        text.value =
+        text.value.toUpperCase()
+    "
+>
+    MAJUSCULES
+</button>
+
+<button
+    class="btn secondary"
+    onclick="
+        text.value =
+        text.value.toLowerCase()
+    "
+>
+    minuscules
+</button>
+
+
+{% elif service.slug == "counter" %}
+
+<h2>
+    Compteur de mots
+</h2>
+
+<textarea
+    id="text"
+    rows="8"
+    oninput="count()"
+></textarea>
+
+<p id="count">
+    0 mot(s), 0 caractère(s)
+</p>
+
+<script>
+
+function count() {
+
+    let value =
+        document.getElementById("text").value;
+
+    let words =
+        value.trim()
+        ? value.trim().split(/\s+/).length
+        : 0;
+
+    document.getElementById("count").textContent =
+        words
+        + " mot(s), "
+        + value.length
+        + " caractère(s)";
+
+}
+
+</script>
+
+
+{% elif service.slug == "password" %}
+
+<h2>
+    Générateur de mot de passe
+</h2>
+
+<button
+    class="btn"
+    onclick="generatePassword()"
+>
+    Générer
+</button>
+
+<input
+    id="out"
+    readonly
+>
+
+
+<script>
+
+function generatePassword() {
+
+    const chars =
+        "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789!@#$%";
+
+    let password = "";
+
+    for (
+        let i = 0;
+        i < 16;
+        i++
+    ) {
+
+        password +=
+            chars[
+                Math.floor(
+                    Math.random() * chars.length
+                )
+            ];
+
+    }
+
+    document.getElementById("out").value =
+        password;
+
+}
+
+</script>
+
+
+{% elif service.slug == "json" %}
+
+<h2>
+    Formateur JSON
+</h2>
+
+<textarea
+    id="json"
+    rows="10"
+    placeholder='{"exemple":true}'
+></textarea>
+
+<button
+    class="btn"
+    onclick="formatJSON()"
+>
+    Formater
+</button>
+
+
+<script>
+
+function formatJSON() {
+
+    const element =
+        document.getElementById("json");
+
+    try {
+
+        element.value =
+            JSON.stringify(
+                JSON.parse(element.value),
+                null,
+                2
+            );
+
+    } catch (error) {
+
+        alert("JSON invalide");
+
+    }
+
+}
+
+</script>
+
+
+{% elif service.slug == "slug" %}
+
+<h2>
+    Générateur de slug
+</h2>
+
+<input
+    id="slugInput"
+    placeholder="Mon titre très intéressant"
+>
+
+<button
+    class="btn"
+    onclick="makeSlug()"
+>
+    Créer le slug
+</button>
+
+<input
+    id="slugOutput"
+    readonly
+>
+
+
+<script>
+
+function makeSlug() {
+
+    let value =
+        document
+        .getElementById("slugInput")
+        .value
+        .normalize("NFD")
+        .replace(
+            /[\u0300-\u036f]/g,
+            ""
+        )
+        .toLowerCase()
+        .trim()
+        .replace(
+            /[^a-z0-9]+/g,
+            "-"
+        )
+        .replace(
+            /^-|-$/g,
+            ""
+        );
+
+    document.getElementById(
+        "slugOutput"
+    ).value = value;
+
+}
+
+</script>
+
+
+{% elif service.slug == "percent" %}
+
+<h2>
+    Calculateur de pourcentage
+</h2>
+
+<div class="grid">
+
+    <div>
+
+        <label>
+            Valeur
+        </label>
+
+        <input
+            id="p1"
+            type="number"
+            step="any"
+        >
+
+    </div>
+
+
+    <div>
+
+        <label>
+            Pourcentage
+        </label>
+
+        <input
+            id="p2"
+            type="number"
+            step="any"
+        >
+
+    </div>
+
+</div>
+
+
+<button
+    class="btn"
+    onclick="calculatePercent()"
+>
+    Calculer
+</button>
+
+<h2 id="percentResult">
+    —
+</h2>
+
+
+<script>
+
+function calculatePercent() {
+
+    const value =
+        parseFloat(
+            document.getElementById("p1").value
+        ) || 0;
+
+    const percent =
+        parseFloat(
+            document.getElementById("p2").value
+        ) || 0;
+
+    const result =
+        value * percent / 100;
+
+    document.getElementById(
+        "percentResult"
+    ).textContent =
+        result.toLocaleString();
+
+}
+
+</script>
+
+
+{% else %}
+
+<h2>
+    Service disponible
+</h2>
+
+<p class="muted">
+    Ce service est accessible directement.
+</p>
+
+{% endif %}
+
+</div>
+
 {% endblock %}
