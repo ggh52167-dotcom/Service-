@@ -1,29 +1,77 @@
 {% extends "base.html" %}
-{% block title %}Accueil — Vidéo & Services{% endblock %}
+
+{% block title %}
+Accueil — Vidéo & Services
+{% endblock %}
+
 {% block content %}
+
 <section class="hero">
-<span class="badge">Sans inscription</span>
-<h1>Regarder une vidéo<br>contre un service 🎬</h1>
-<p class="muted">Utilisez les outils directement. Aucun compte, aucune connexion et aucune donnée personnelle obligatoire.</p>
+
+    <span class="badge">
+        Sans inscription
+    </span>
+
+    <h1>
+        Des outils simples et rapides
+    </h1>
+
+    <p class="muted">
+        Choisissez directement un service.
+        Aucun compte et aucune connexion ne sont nécessaires.
+    </p>
+
 </section>
 
-<div class="grid">
-{% for s in services %}
-<article class="card">
-<h2>{{ s.name }}</h2><p class="muted">{{ s.description }}</p>
-{% if s.reward_required %}
-<span class="badge">🎬 Vidéo requise</span>
-{% else %}
-<span class="badge">Accès direct</span>
-{% endif %}
-<br><br><a class="btn" href="{{ url_for('service', slug=s.slug) }}">Ouvrir</a>
-</article>
-{% endfor %}
+
+{% if site_settings.ads_enabled == "1" and site_settings.ad_middle %}
+
+<div class="ad">
+    {{ site_settings.ad_middle|safe }}
 </div>
 
-{% if site_settings.ads_enabled=="1" and site_settings.ad_middle %}
-<div class="ad">{{ site_settings.ad_middle|safe }}</div>
-{% else %}
-<!-- ADSTERRA_MIDDLE -->
 {% endif %}
+
+
+<div class="grid">
+
+{% for s in services %}
+
+<article class="card">
+
+    <h2>
+        {{ s.name }}
+    </h2>
+
+    <p class="muted">
+        {{ s.description }}
+    </p>
+
+    {% if s.active %}
+
+    <a
+        class="btn"
+        href="{{ url_for('service', slug=s.slug) }}"
+    >
+        Utiliser le service
+    </a>
+
+    {% endif %}
+
+</article>
+
+{% else %}
+
+<div class="card">
+
+    <p>
+        Aucun service disponible pour le moment.
+    </p>
+
+</div>
+
+{% endfor %}
+
+</div>
+
 {% endblock %}
